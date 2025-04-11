@@ -28,5 +28,7 @@ public class BlogService {
     public void addComment(Comment comment){
         commentRepo.save(comment);
     }
-    
+    public List<Post> searchResult(String keyword){
+        return blogRepo.findByUser_UserNameContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword,keyword);
+    }
 }

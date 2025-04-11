@@ -7,5 +7,5 @@ import com.blogapplication.blogapplication.Model.User;
 
 @Repository
 public interface UserRepo extends JpaRepository<User,Integer>{
-    User findByuserName(String username);
+    User findByUserName(String username);
 }
