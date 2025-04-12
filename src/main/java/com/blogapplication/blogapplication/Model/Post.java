@@ -19,10 +19,11 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,13 +39,77 @@ public class Post {
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
     
-    @JsonProperty("imageData")
-    @Transient  
+    @Lob
     private byte[] image;
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    @JsonProperty("imageData")
+    @Transient
     public String getImageData() {
         if (this.image != null) {
             return Base64.getEncoder().encodeToString(this.image);
         }
         return null;
-}
+    }
+
+    // Setters
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    // Constructors
+    public Post() {
+    }
+
+    public Post(int id, String title, String description, User user, List<Comment> comments, byte[] image) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.user = user;
+        this.comments = comments;
+        this.image = image;
+    }
 }

@@ -1,0 +1,34 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/BlogApplication
+      SPRING_DATASOURCE_USERNAME: Blog_Application
+      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+
+  
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: blog_Application
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: BlogApplication
+    ports:
+      - "5433:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80" 
+    depends_on:
+      - postgres
