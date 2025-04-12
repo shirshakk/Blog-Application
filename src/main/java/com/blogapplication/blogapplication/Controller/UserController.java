@@ -12,9 +12,10 @@ import com.blogapplication.blogapplication.Model.Post;
 import com.blogapplication.blogapplication.Model.User;
 import com.blogapplication.blogapplication.Service.BlogService;
 import com.blogapplication.blogapplication.Service.UserService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 
@@ -36,7 +37,7 @@ public class UserController  {
         return posts;
     }
 
-    @PutMapping("profile")
+    @PutMapping("/profile")
     public ResponseEntity<?> UpdateUserProfile(@RequestBody User entity) {
         try{
             userService.updateUser(entity);
@@ -46,5 +47,13 @@ public class UserController  {
         }
         
     }
-
+    @DeleteMapping("/profile")
+    public ResponseEntity<?> ProfileDelete(){
+        try{
+            userService.deleteCurrentUser();
+            return ResponseEntity.ok().body("User Deleted");    
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body("Failed to delete profile");
+        }
+    }
 }

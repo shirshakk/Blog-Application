@@ -20,25 +20,32 @@ public class UserService {
         entity.setPassword(encoder.encode(entity.getPassword()));
         userRepo.save(entity);
     }
-    public ResponseEntity<?> updateUser(User updateUser){
-        try{
-            Authentication auth=SecurityContextHolder.getContext().getAuthentication();
-            UserDetailImplementation userDetail=(UserDetailImplementation) auth.getPrincipal();
-            User user=userRepo.findByUserName(userDetail.getUsername());
-            if(user==null){
-                return ResponseEntity.notFound().build();
-            }
-            if(updateUser.getPassword()!=null){
-                user.setPassword(encoder.encode(updateUser.getPassword()));
-            }
-            if(updateUser.getEmailId()!=null){
-                user.setEmailId(updateUser.getEmailId());
-            }
-            userRepo.save(user);
-            return ResponseEntity.ok().build();
-        }catch(Exception e){
-            return ResponseEntity.badRequest().body("Failed to update user"+e.getMessage());
+    public User updateUser(User updateUser) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailImplementation userDetail = (UserDetailImplementation) auth.getPrincipal();
+        User user = userRepo.findByUserName(userDetail.getUsername());
+        
+        if (user == null) {
+            throw new RuntimeException("User not found");
         }
+
+        if (updateUser.getPassword() != null) {
+            user.setPassword(encoder.encode(updateUser.getPassword()));
+        }
+        if (updateUser.getEmailId() != null) {
+            user.setEmailId(updateUser.getEmailId());
+        }
+        return userRepo.save(user); 
+    }
+    public void deleteCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailImplementation userDetail = (UserDetailImplementation) auth.getPrincipal();
+        User user = userRepo.findByUserName(userDetail.getUsername());
+        
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        userRepo.delete(user);
     }
     
 }

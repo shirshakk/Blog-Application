@@ -1,10 +1,12 @@
 package com.blogapplication.blogapplication.Model;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotation;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -16,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Entity
@@ -25,8 +28,6 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(nullable = true)
-    @Lob
-    private byte[] image;
     private String title;
     private String description;
     @ManyToOne
@@ -37,4 +38,13 @@ public class Post {
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>();
     
+    @JsonProperty("imageData")
+    @Transient  
+    private byte[] image;
+    public String getImageData() {
+        if (this.image != null) {
+            return Base64.getEncoder().encodeToString(this.image);
+        }
+        return null;
+}
 }
