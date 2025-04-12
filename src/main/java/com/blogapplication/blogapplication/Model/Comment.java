@@ -26,8 +26,5 @@ public class Comment {
     @JsonBackReference
     @JoinColumn(name = "Post_id")
     private Post post;
-    @Lob
     private String comment;
-
-
 }

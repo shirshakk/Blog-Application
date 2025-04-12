@@ -12,6 +12,7 @@ import com.blogapplication.blogapplication.Model.Comment;
 import com.blogapplication.blogapplication.Model.Post;
 import com.blogapplication.blogapplication.Service.BlogService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -24,9 +25,14 @@ public class BlogController {
     public void AddNewPost(@RequestBody Post entity) {
         blogService.addBlog(entity);
     }
-    @PostMapping("/comment/{postId}")
-    public void AddComment(@RequestBody Comment entity) {
-        blogService.addComment(entity);
+    @PostMapping("/posts/{postId}/comments")
+    public ResponseEntity<?> addComment(@RequestBody Comment comment, @PathVariable int postId) {
+        try {
+            blogService.addComment(comment, postId);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to add comment: " + e.getMessage());
+        }
     }
     @GetMapping("/search")
     public ResponseEntity<?> search(

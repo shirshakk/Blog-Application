@@ -23,6 +23,10 @@ public class BlogService {
     private UserRepo userRepo;
     @Autowired
     private CommentRepo commentRepo;
+    
+    
+    
+    
     public void addBlog(Post post){
         Authentication auth=SecurityContextHolder.getContext().getAuthentication();
         UserDetailImplementation userDetail= (UserDetailImplementation) auth.getPrincipal();
@@ -32,13 +36,22 @@ public class BlogService {
             blogRepo.save(post);
         }
     }
-
     public List<Post> getAllPosts(){
         return blogRepo.findAll();
     }
 
-    public void addComment(Comment comment){
-        commentRepo.save(comment);
+    public void addComment(Comment comment, int postId){
+        Post post=blogRepo.findById(postId).orElse(null);
+        if(post!=null){
+        Authentication auth=SecurityContextHolder.getContext().getAuthentication();
+        UserDetailImplementation userDetail=(UserDetailImplementation) auth.getPrincipal();
+        if(userDetail!=null){
+            User user=userRepo.findByUserName(userDetail.getUsername());
+            comment.setUser(user);
+            comment.setPost(post);
+            commentRepo.save(comment);
+        }
+    }
     }
     public List<Post> searchResult(String keyword){
         return blogRepo.findByUser_UserNameContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword,keyword);
